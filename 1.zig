@@ -16,6 +16,7 @@ pub fn main() !void {
     var lines = std.mem.split(file_content, "\n");
 
     while (lines.next()) |line| {
+        // NOTE: If line is not trimmed, parseInt will return error
         if (std.fmt.parseInt(u32, line, 10)) |number| {
             try numbers.append(number);
         } else |err| {}
