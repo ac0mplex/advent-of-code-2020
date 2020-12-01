@@ -1,30 +1,24 @@
 const std = @import("std");
 
 pub fn main() !void {
-    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    defer _ = gpa.deinit();
+    var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+    defer arena.deinit();
 
-    const file = try std.fs.cwd().openFile("input/1", .{
-        .read = true,
-        .write = false,
-    });
-    defer file.close();
+    const allocator = &arena.allocator;
 
-    var numbers = std.ArrayList(u32).init(&gpa.allocator);
-    defer numbers.deinit();
+    const file_content = try std.fs.cwd().readFileAlloc(
+        allocator,
+        "input/1",
+        std.math.maxInt(usize),
+    );
 
-    var buffer = std.ArrayList(u8).init(&gpa.allocator);
-    defer buffer.deinit();
+    var numbers = std.ArrayList(u32).init(allocator);
+    var lines = std.mem.split(file_content, "\n");
 
-    const reader = file.reader();
-
-    while (true) {
-        reader.readUntilDelimiterArrayList(&buffer, '\n', std.math.maxInt(usize)) catch {
-            break;
-        };
-
-        const number = try std.fmt.parseInt(u32, buffer.items, 10);
-        try numbers.append(number);
+    while (lines.next()) |line| {
+        if (std.fmt.parseInt(u32, line, 10)) |number| {
+            try numbers.append(number);
+        } else |err| {}
     }
 
     std.debug.print("{}\n", .{solve(numbers.items)});
