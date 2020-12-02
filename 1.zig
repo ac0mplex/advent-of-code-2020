@@ -28,7 +28,7 @@ pub fn main() !void {
 
 pub fn solve(items: []u32) u32 {
     for (items) |item1, i| {
-        for (items[i..]) |item2| {
+        for (items[i + 1 ..]) |item2| {
             if (item1 + item2 == 2020) {
                 return item1 * item2;
             }
@@ -40,8 +40,8 @@ pub fn solve(items: []u32) u32 {
 
 pub fn solve2(items: []u32) u32 {
     for (items) |item1, i| {
-        for (items[i..]) |item2, j| {
-            for (items[j..]) |item3| {
+        for (items[i + 1 ..]) |item2, j| {
+            for (items[j + 1 ..]) |item3| {
                 if (item1 + item2 + item3 == 2020) {
                     return item1 * item2 * item3;
                 }
