@@ -30,14 +30,10 @@ fn parsePasswords(allocator: *std.mem.Allocator, data: []u8) ![]PasswordRule {
     var lines = std.mem.tokenize(data, "\n");
 
     while (lines.next()) |line| {
-        var tokens = std.mem.split(line, " ");
+        var tokens = std.mem.tokenize(line, " -:");
 
-        const range = tokens.next() orelse std.debug.panic("Wrong format!", .{});
-        var rangeIterator = std.mem.split(range, "-");
-
-        const minStr = rangeIterator.next() orelse std.debug.panic("Wrong format!", .{});
-        const maxStr = rangeIterator.next() orelse std.debug.panic("Wrong format!", .{});
-
+        const minStr = tokens.next() orelse std.debug.panic("Wrong format!", .{});
+        const maxStr = tokens.next() orelse std.debug.panic("Wrong format!", .{});
         const requiredCharToken = tokens.next() orelse std.debug.panic("Wrong format!", .{});
         const password = tokens.next() orelse std.debug.panic("Wrong format!", .{});
 
