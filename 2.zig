@@ -32,16 +32,11 @@ fn parsePasswords(allocator: *std.mem.Allocator, data: []u8) ![]PasswordRule {
     while (lines.next()) |line| {
         var tokens = std.mem.tokenize(line, " -:");
 
-        const minStr = tokens.next() orelse std.debug.panic("Wrong format!", .{});
-        const maxStr = tokens.next() orelse std.debug.panic("Wrong format!", .{});
-        const requiredCharToken = tokens.next() orelse std.debug.panic("Wrong format!", .{});
-        const password = tokens.next() orelse std.debug.panic("Wrong format!", .{});
-
         try passwordRules.append(.{
-            .password = password,
-            .requiredChar = requiredCharToken[0],
-            .min = try std.fmt.parseUnsigned(u32, minStr, 10),
-            .max = try std.fmt.parseUnsigned(u32, maxStr, 10),
+            .min = try std.fmt.parseUnsigned(u32, tokens.next().?, 10),
+            .max = try std.fmt.parseUnsigned(u32, tokens.next().?, 10),
+            .requiredChar = tokens.next().?[0],
+            .password = tokens.next().?,
         });
     }
 
@@ -55,14 +50,12 @@ fn validatePasswords1(passwordRules: []const PasswordRule) u32 {
         var numOfRequiredChar: u32 = 0;
 
         for (rule.password) |char| {
-            if (char == rule.requiredChar) {
-                numOfRequiredChar += 1;
-            }
+            numOfRequiredChar += @boolToInt(char == rule.requiredChar);
         }
 
-        if (numOfRequiredChar >= rule.min and numOfRequiredChar <= rule.max) {
-            validated += 1;
-        }
+        validated += @boolToInt(
+            numOfRequiredChar >= rule.min and numOfRequiredChar <= rule.max,
+        );
     }
 
     return validated;
@@ -75,9 +68,7 @@ fn validatePasswords2(passwordRules: []const PasswordRule) u32 {
         var firstAppears = rule.password[rule.min - 1] == rule.requiredChar;
         var secondAppears = rule.password[rule.max - 1] == rule.requiredChar;
 
-        if (firstAppears != secondAppears) {
-            validated += 1;
-        }
+        validated += @boolToInt(firstAppears != secondAppears);
     }
 
     return validated;
