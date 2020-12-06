@@ -99,11 +99,13 @@ const sample_input =
     \\b
 ;
 
+// I hope I won't need those casts in the future
+// https://github.com/ziglang/zig/issues/4437
 test "part_1_sample_input" {
     expectEqual(@as(u32, 3), part1("abc"));
-    expectEqual(@as(u32, 3), part1("a\nb\nc\n"));
+    expectEqual(@as(u32, 3), part1("a\nb\nc"));
     expectEqual(@as(u32, 3), part1("ab\nac"));
-    expectEqual(@as(u32, 1), part1("a\na\na\na\n"));
+    expectEqual(@as(u32, 1), part1("a\na\na\na"));
     expectEqual(@as(u32, 1), part1("b"));
 
     expectEqual(@as(u32, 11), part1(sample_input));
@@ -111,9 +113,9 @@ test "part_1_sample_input" {
 
 test "part_2_sample_input" {
     expectEqual(@as(u32, 3), part2("abc"));
-    expectEqual(@as(u32, 0), part2("a\nb\nc\n"));
+    expectEqual(@as(u32, 0), part2("a\nb\nc"));
     expectEqual(@as(u32, 1), part2("ab\nac"));
-    expectEqual(@as(u32, 1), part2("a\na\na\na\n"));
+    expectEqual(@as(u32, 1), part2("a\na\na\na"));
     expectEqual(@as(u32, 1), part2("b"));
 
     expectEqual(@as(u32, 6), part2(sample_input));
