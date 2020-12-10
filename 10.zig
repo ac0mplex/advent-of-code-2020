@@ -1,6 +1,8 @@
 const std = @import("std");
 const my_input = @embedFile("input/10");
 
+const asc_u32 = std.sort.asc(u32);
+
 pub fn main() !void {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena.deinit();
@@ -18,11 +20,7 @@ pub fn main() !void {
         );
     }
 
-    std.sort.sort(u32, adapters.items, {}, (struct {
-        fn cmp(context: void, a: u32, b: u32) bool {
-            return a < b;
-        }
-    }).cmp);
+    std.sort.sort(u32, adapters.items, {}, asc_u32);
 
     var one_jolt_differences: u32 = 0;
     var three_jolt_differences: u32 = 0;
