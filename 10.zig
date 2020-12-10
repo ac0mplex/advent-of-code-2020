@@ -22,6 +22,11 @@ pub fn main() !void {
 
     std.sort.sort(u32, adapters.items, {}, asc_u32);
 
+    // built-in adapter
+    try adapters.append(
+        adapters.items[adapters.items.len - 1] + 3,
+    );
+
     var one_jolt_differences: u32 = 0;
     var three_jolt_differences: u32 = 0;
 
@@ -31,9 +36,6 @@ pub fn main() !void {
         one_jolt_differences += @boolToInt(difference == 1);
         three_jolt_differences += @boolToInt(difference == 3);
     }
-
-    // Bult-in adapter is always rated for 3 jolts higher
-    three_jolt_differences += 1;
 
     std.debug.print("Part 1: {}\n", .{
         one_jolt_differences * three_jolt_differences,
